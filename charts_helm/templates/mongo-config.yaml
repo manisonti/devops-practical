@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+data:
+  MONGODB_HOST: "{{ template "devops-practical-app.fullname" . }}-mongodb.{{ .Release.Name }}"
+  MONGODB_PORT: "{{ .Values.mongodb.port }}"
+  MONGODB_DATABASE: "{{ .Values.mongodb.database }}"
+  MONGODB_URI: "mongodb://{{ template "devops-practical-app.fullname" . }}-mongodb:{{ .Values.mongodb.port }}/database"
+ 
+  
+  # MONGODB_URI: "mongodb://{{ template "devops-practical-app.fullname" . }}-mongodb.{{ .Release.Name }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}"
+  # value: mongodb://{{ template "devops-practical-app.fullname" . }}-mongodb:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}
+ 

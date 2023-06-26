@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "devops-practical-app.fullname" . }}
+  labels:
+    app: {{ template "devops-practical-app.fullname" . }}
+    release: {{ .Release.Name }}
+spec:
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 3000
+      name: {{ template "devops-practical-app.fullname" . }}
+  selector:
+    app: {{ template "devops-practical-app.fullname" . }}
+    release: {{ .Release.Name }}
+  type: {{ .Values.service.type }}

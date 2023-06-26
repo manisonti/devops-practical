@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "devops-practical-app.fullname" . }}-mongodb
+  labels:
+    app: {{ template "devops-practical-app.name" . }}
+    release: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "devops-practical-app.name" . }}
+      release: {{ .Release.Name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "devops-practical-app.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      dnsPolicy: Default
+      containers:
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: {{ .Values.mongodb.port }}
+      #     volumeMounts:
+      #       - name: mongodb-data
+      #         mountPath: /data/db
+      # volumes:
+      #   - name: mongodb-data
+      #     emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "devops-practical-app.fullname" . }}-mongodb
+  labels:
+    app: {{ template "devops-practical-app.name" . }}
+    release: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ template "devops-practical-app.name" . }}
+    release: {{ .Release.Name }}
+  ports:
+    - name: mongodb
+      protocol: TCP
+      port: {{ .Values.mongodb.port }}
+      targetPort: {{ .Values.mongodb.port }}

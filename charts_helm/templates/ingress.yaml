@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "devops-practical-app.fullname" . }}
+  labels:
+    app: {{ template "devops-practical-app.fullname" . }}
+    release: {{ .Release.Name }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "devops-practical-app.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}

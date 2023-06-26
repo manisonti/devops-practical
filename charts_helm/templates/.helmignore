@@ -1,0 +1,4 @@
+# Ignore specific files
+*.txt
+persistentvolume.yaml
+persistentvolumeclaim.yaml

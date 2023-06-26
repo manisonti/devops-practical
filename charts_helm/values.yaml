@@ -1,0 +1,39 @@
+app:
+  name: devops-practical-app
+replicaCount: 1
+
+image:
+  repository: manikantasonti/devops-practical-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  port: 3000
+  type: ClusterIP
+
+mongodb:
+  port: 27017
+
+#   enabled: true
+#   host: mongodb
+#   port: 27017
+#   database: database
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: devops-practical-app.local
+      paths: []
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+env:
+  - name: MONGODB_URI
+    value: mongodb://mongodb:27017/database

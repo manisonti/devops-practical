@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "devops-practical-app.fullname" . }}
+  labels:
+    app: {{ template "devops-practical-app.fullname" . }}
+    release: {{ .Release.Name }}
+spec:
+  template:
+    spec:
+      minReadySeconds: 30
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "devops-practical-app.fullname" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "devops-practical-app.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: mongo-config
+          ports:
+            - containerPort: 3000
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: {{ .Values.mongodb.port }}
+          env: 
+            - name: MONGODB_URI
+              value: mongodb://{{ template "devops-practical-app.fullname" . }}-mongodb:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}
+      #     volumeMounts:
+      #       - name: mongo-data
+      #         mountPath: /data/db
+      # volumes:
+      #   - name: mongo-data
+      #     persistentVolumeClaim:
+      #       claimName: {{ template "devops-practical-app.fullname" . }}-mongo-pvc
